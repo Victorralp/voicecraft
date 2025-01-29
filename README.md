@@ -1,15 +1,23 @@
 # VoiceCraft
 
-A modern text-to-speech web application with language detection and translation capabilities.
+VoiceCraft is an advanced text-to-speech web application that breaks down language barriers. It automatically detects the input language, provides seamless translation between multiple languages, and converts text to natural-sounding speech. With its intuitive interface and powerful features, VoiceCraft makes it easy to transform written content into spoken words in your preferred language.
 
-## Features
+## Key Features
 
-- Automatic language detection
-- Text translation between multiple languages
-- Text-to-speech conversion with customizable voices
-- Adjustable speech rate and pitch
-- Responsive design for all devices
-- Text download functionality
+- 🔍 **Smart Language Detection**: Automatically identifies the input language
+- 🌍 **Multi-Language Translation**: Translate between 10+ major languages
+- 🗣️ **Natural Text-to-Speech**: High-quality voice synthesis with customizable settings
+- 🎛️ **Voice Customization**: Adjust speech rate, pitch, and choose from multiple voices
+- 📱 **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- 💾 **Export Options**: Download text content for offline use
+- ⚡ **Real-Time Preview**: Instant audio preview of your text
+
+Perfect for:
+- Language learning and pronunciation practice
+- Content creators needing multi-language voiceovers
+- Accessibility tools for visual impairment
+- Educational resources and learning materials
+- International communication and presentations
 
 ## Technologies Used
 
