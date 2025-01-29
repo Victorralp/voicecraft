@@ -12,11 +12,14 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    host: true
+    host: true,
+    https: true
   },
   base: '/voicecraft/',
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: true,
+    assetsDir: 'assets',
+    emptyOutDir: true,
   }
 });
