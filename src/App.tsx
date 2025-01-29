@@ -1,11 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Volume2, 
   Download, 
   Play, 
   Pause, 
   Settings, 
-  Mic
+  Mic,
+  Moon,
+  Sun
 } from 'lucide-react';
 import { franc } from 'franc-min';
 
@@ -21,6 +23,7 @@ function App() {
   const [targetLanguage, setTargetLanguage] = useState<string>('');
   const [translatedText, setTranslatedText] = useState<string>('');
   const [isTranslating, setIsTranslating] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Language mapping for display
   const languageNames: { [key: string]: string } = {
@@ -50,6 +53,22 @@ function App() {
     kor: 'ko',
     cmn: 'zh'
   };
+
+  // Initialize dark mode from localStorage
+  useEffect(() => {
+    const savedMode = localStorage.getItem('darkMode');
+    setIsDarkMode(savedMode === 'true');
+  }, []);
+
+  // Update localStorage when dark mode changes
+  useEffect(() => {
+    localStorage.setItem('darkMode', isDarkMode.toString());
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   // Function to translate text
   const translateText = async (text: string, sourceLang: string, targetLang: string) => {
@@ -246,20 +265,28 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className={`min-h-screen transition-colors duration-200 ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-b from-blue-50 to-white'}`}>
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm transition-colors duration-200`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center space-x-2">
-              <Volume2 className="h-8 w-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">VoiceCraft</h1>
+              <Volume2 className={`h-8 w-8 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+              <h1 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>VoiceCraft</h1>
             </div>
-            <nav className="flex space-x-4">
-              <a href="#" className="text-gray-600 hover:text-blue-600">Features</a>
-              <a href="#" className="text-gray-600 hover:text-blue-600">Pricing</a>
-              <a href="#" className="text-gray-600 hover:text-blue-600">API</a>
-            </nav>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`p-2 rounded-lg ${isDarkMode ? 'bg-gray-700 text-yellow-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} transition-colors`}
+              >
+                {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </button>
+              <nav className="flex space-x-4">
+                <a href="#" className={`${isDarkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'}`}>Features</a>
+                <a href="#" className={`${isDarkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'}`}>Pricing</a>
+                <a href="#" className={`${isDarkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'}`}>API</a>
+              </nav>
+            </div>
           </div>
         </div>
       </header>
@@ -269,33 +296,37 @@ function App() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
           {/* Text Input Section */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+            <div className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-lg p-4 sm:p-6 transition-colors duration-200`}>
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Enter your text here to convert to speech..."
-                className="w-full h-48 sm:h-64 p-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className={`w-full h-48 sm:h-64 p-4 border ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-200 text-gray-900'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-colors duration-200`}
               />
               {translatedText && (
-                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Translated Text:</h3>
-                  <p className="text-gray-600">{translatedText}</p>
+                <div className={`mt-4 p-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-lg transition-colors duration-200`}>
+                  <h3 className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>Translated Text:</h3>
+                  <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{translatedText}</p>
                 </div>
               )}
               <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
-                  <span className="text-sm text-gray-500">
+                  <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                     {text.length} / 5000 characters
                   </span>
                   {detectedLanguage && (
-                    <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                    <span className={`text-sm ${isDarkMode ? 'bg-blue-900 text-blue-200' : 'bg-blue-100 text-blue-800'} px-2 py-1 rounded-full`}>
                       {languageNames[detectedLanguage] || 'Unknown Language'}
                     </span>
                   )}
                   <select
                     value={targetLanguage}
                     onChange={(e) => setTargetLanguage(e.target.value)}
-                    className="text-sm border border-blue-200 rounded-lg p-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto"
+                    className={`text-sm border rounded-lg p-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto ${
+                      isDarkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white' 
+                        : 'border-blue-200 text-gray-900'
+                    }`}
                   >
                     <option value="">Translate to...</option>
                     {Object.entries(languageNames)
@@ -310,7 +341,11 @@ function App() {
                 <button 
                   onClick={handleSpeak}
                   disabled={!text || isTranslating}
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto justify-center"
+                  className={`${
+                    isDarkMode 
+                      ? 'bg-blue-600 hover:bg-blue-700' 
+                      : 'bg-blue-600 hover:bg-blue-700'
+                  } text-white px-6 py-2 rounded-lg transition-colors flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto justify-center`}
                 >
                   {isTranslating ? (
                     <span>Translating...</span>
@@ -327,19 +362,23 @@ function App() {
 
           {/* Settings Panel */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <Settings className="h-5 w-5 mr-2 text-blue-600" />
+            <div className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-lg p-4 sm:p-6 transition-colors duration-200`}>
+              <h2 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-4 flex items-center`}>
+                <Settings className={`h-5 w-5 mr-2 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                 Voice Settings
               </h2>
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
                     Select Voice
                   </label>
                   <select 
-                    className="w-full border border-gray-200 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className={`w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      isDarkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white' 
+                        : 'border-gray-200 text-gray-900'
+                    }`}
                     value={selectedVoice}
                     onChange={(e) => setSelectedVoice(Number(e.target.value))}
                   >
@@ -352,7 +391,7 @@ function App() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
                     Speaking Rate: {rate}x
                   </label>
                   <input 
@@ -362,12 +401,12 @@ function App() {
                     step="0.1" 
                     value={rate}
                     onChange={(e) => setRate(Number(e.target.value))}
-                    className="w-full"
+                    className="w-full accent-blue-600"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
                     Pitch: {pitch}x
                   </label>
                   <input 
@@ -377,24 +416,24 @@ function App() {
                     step="0.1" 
                     value={pitch}
                     onChange={(e) => setPitch(Number(e.target.value))}
-                    className="w-full"
+                    className="w-full accent-blue-600"
                   />
                 </div>
               </div>
             </div>
 
             {/* Audio Preview */}
-            <div className="mt-4 sm:mt-6 bg-white rounded-lg shadow-lg p-4 sm:p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <Mic className="h-5 w-5 mr-2 text-blue-600" />
+            <div className={`mt-4 sm:mt-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-lg p-4 sm:p-6 transition-colors duration-200`}>
+              <h2 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-4 flex items-center`}>
+                <Mic className={`h-5 w-5 mr-2 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                 Audio Preview
               </h2>
               <div className="space-y-4">
-                <div className="flex items-center justify-center h-20 sm:h-24 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                <div className={`flex items-center justify-center h-20 sm:h-24 ${isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'} rounded-lg border-2 border-dashed transition-colors duration-200`}>
                   <button 
                     onClick={togglePlayPause}
                     disabled={!text}
-                    className="p-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className={`p-3 rounded-full ${isDarkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'} text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
                   </button>
@@ -403,7 +442,11 @@ function App() {
                   <button 
                     onClick={handleTextDownload}
                     disabled={!text}
-                    className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className={`${
+                      isDarkMode 
+                        ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    } px-4 py-2 rounded-lg transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     <Download className="h-4 w-4" />
                     <span>Text</span>
